@@ -1,8 +1,8 @@
 # Send the file of deleted records to OCLC
 00 21 * * 0 /software/WYLD/Unicorn/Bincustom/sendoclcdel.sh 2>&1
 
-# Send the file of new records added to OCLC
-45 22 5 * * /software/WYLD/Unicorn/Bincustom/oclcmonthly.sh 2>&1
+# Create the files to upload to OCLC for both new orginal and updated records
+45 22 4 * * /software/WYLD/Unicorn/Bincustom/oclc-integrated.sh 2>&1
 
-# Send the file of new original records to OCLC
-45 22 4 * * /software/WYLD/Unicorn/Bincustom/originalcatalogingmonthly.sh 2>&1
+# SFTP the original and updated records to OCLC
+45 22 5 * * /software/WYLD/Unicorn/Bincustom/oclc-sftp.sh 2>&1
