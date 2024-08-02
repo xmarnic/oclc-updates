@@ -37,11 +37,11 @@ selitem -y~"${library_codes}" -t~"${item_types}" -l~ON-ORDER -oC > "${records}"
 # Append WSL SERIALs to the standard list of catalog keys
 selitem -yWSL -t~"${item_types}" -l~ON-ORDER -oC >> "${records}"
 
-# Filter for recent catalog key records (using date last modified)
-cat "${records}" | selcatalog -iC "-r>$begin<$today" -oC > "${recent_records}"
-
 # Remove duplicate records
 sort -u "${recent_records}" > "${unique_records}"
+
+# Filter for recent catalog key records (using date last modified)
+cat "${unique_records}" | selcatalog -iC "-r>$begin<$today" -oC > "${recent_records}"
 
 # Filter out the excluded catalog formats and select only those records with OCLC number
 cat "${unique_records}" | selcatalog -iC -oCe -e001 -f~"${catalog_formats}" | grep -E "oc|on"  > "${select_records}"
