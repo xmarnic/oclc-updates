@@ -1,0 +1,70 @@
+# appears the cron jobs run an hour earlier, for example the haltrun is set for 3:45 but the pid files have a timestamp of 2:45.
+
+# Haltrun script
+45 03 * * * /software/sirsi/sirsi_net_hir.pl cycle WYLD
+
+# Read inbox and generate summaries of bounced messages
+00 01 * * * /software/sirsi/process_mail_rhel.pl
+
+# Shield restart
+00 0 * * * /software/WYLD/Unicorn/Shield/shield/bin/shield-restart.sh >> /software/WYLD/Unicorn/Shield/shield/logs/restart.log
+
+# Natrself script
+10 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 * * * /software/WYLD/Unicorn/Bincustom/natrself.sh
+
+# New books
+30 15 * * 0 /software/WYLD/Unicorn/Bincustom/newbooks 2>&1
+
+# Important for ILL
+00,05,10,15,20,25,30,35,40,45,50,55 7-23 * * * /software/WYLD/Unicorn/Bincustom/request_ill.sh 2>&1
+
+# Sends an email to library when patron registers online
+00,05,10,15,20,25,30,35,40,45,50,55 7-23 * * * /software/WYLD/Unicorn/Bincustom/user_reg.sh 2>&1
+
+# Send the file of deleted records to OCLC
+00 21 * * 0 /software/WYLD/Unicorn/Bincustom/sendoclcdel.sh 2>&1
+
+# Send the file of new records added to OCLC
+45 22 5 * * /software/WYLD/Unicorn/Bincustom/oclcmonthly.sh 2>&1
+
+# Send the file of new original records to OCLC
+45 22 4 * * /software/WYLD/Unicorn/Bincustom/originalcatalogingmonthly.sh 2>&1
+
+# Clean out some of our custom report files
+58 01 * * * /software/WYLD/Unicorn/Bincustom/cleanrpttemp.sh 2>&1
+
+# Clean SIP logs
+56 00 * * * /software/WYLD/Unicorn/Bincustom/cleansiplogs
+
+# Look for patrons with SMSONLY but no SMS entry
+10 6 * * * /software/WYLD/Unicorn/Bincustom/cat5nosms.sh
+
+# Quarterly count of items on serial records
+# 15 16 3 1 * /software/WYLD/Unicorn/Bincustom/countseritems.sh 2>&1
+# 15 16 3 4 * /software/WYLD/Unicorn/Bincustom/countseritems.sh 2>&1
+# 15 16 3 7 * /software/WYLD/Unicorn/Bincustom/countseritems.sh 2>&1
+# 15 16 3 10 * /software/WYLD/Unicorn/Bincustom/countseritems.sh 2>&1
+
+# Build the online circmap and policies
+10 07 * * * /software/WYLD/Map/makemap.sh 2>&1
+
+# BCV stats
+00 05 * * * /software/WYLD/BCV/bcstats.sh WYLD
+
+# Check SIP and email
+00,10,20,30,40,50 * * * * /software/WYLD/Unicorn/Bin/perl /software/WYLD/Unicorn/Bincustom/sipConnWYLD.pl
+
+# Aspen full extract
+15 23 * * * /software/WYLD/AspenExtract/full_extract.sh
+
+# Aspen delta extract
+00,05,10,15,20,25,30,35,40,45,50,55 8-22 * * * /software/WYLD/AspenExtract/delta_extract.sh
+
+# Aspen authority extract
+15 20 * * 0 /software/WYLD/AspenExtract/authority_extract.sh
+
+# Aspen course reserves
+30 19 * * * /software/WYLD/AspenExtract/course_reserves.sh
+
+# Authority update, Ellett, 12/5/2022
+30 06 * * * SHELL=/bin/ksh; . /software/WYLD/Unicorn/Config/environ; export PATH UPATH BRSConfig ICU_DATA LD_LIBRARY_PATH NLS_LANG LANG NLS_SORT ORACLE_BASE ORACLE_HOME ORACLE_SID TNS_ADMIN; sh /software/WYLD/Unicorn/Custom/Auth_update/master.sh >/software/WYLD/Unicorn/Custom/Auth_update/master.out 2>/software/WYLD/Unicorn/Custom/Auth_update/master.rpt
