@@ -4,6 +4,9 @@
 export PATH BRSConfig UPATH WINDIR TERMINFO TERMCAP TZ ORACLE_SID ORACLE_BASE\
 ORACLE_HOME LD_LIBRARY_PATH TNS_ADMIN
 
+logfile="/software/WYLD/Nic/Logs/oclc-integrated.log"
+echo "[$(date)] Starting OCLC Integrated Updates" >> $logfile
+
 begin=$(transdate -m-1)
 today=$(transdate -m-0)
 
@@ -57,3 +60,10 @@ cat "${existing_records}" | catalogdump -om > "${oclc_updates}"
 
 # Create an output file of the oclc original records 
 cat "${original_records}" | catalogdump -om > "${oclc_originals}"
+
+if [ $? -eq 0 ]; then
+    echo "[$(date)] Success: OCLC update files created" >> $logfile
+else
+    echo "[$(date)] Failure: 'oclc-integrated.sh' encountered an error when\
+        creating the OCLC update files" >> $logfile
+fi
